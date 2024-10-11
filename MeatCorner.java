@@ -3,8 +3,10 @@ package Mission.ShoppingListTest;
 public class MeatCorner extends FoodSection
 {
 
-    static int count = 1;
+    static int IDCount = 1;
     int ID;
+
+    int quantity = 1;
 
     @Override
     protected String getName() {
@@ -22,6 +24,17 @@ public class MeatCorner extends FoodSection
         return ID;
     }
 
+    @Override
+    protected int getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    protected void setQuantity()
+    {
+        this.quantity++;
+    }
+
 
     MeatCorner()
     {
@@ -31,11 +44,12 @@ public class MeatCorner extends FoodSection
 
     MeatCorner(String name, int price, String origin, String expirationDate, String manufacture) {
         super(name, price, origin, expirationDate, manufacture);
-        this.ID = count++;
+        this.ID = IDCount++;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return  ID + "{" +
                 "제품명='" + name + '\'' +
                 ", 가격=" + price +
@@ -44,4 +58,6 @@ public class MeatCorner extends FoodSection
                 ", 제조일자='" + manufacture + '\'' +
                 '}';
     }
+
+
 }

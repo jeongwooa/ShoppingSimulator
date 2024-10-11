@@ -3,8 +3,12 @@ package Mission.ShoppingListTest;
 public class VegetableCorner  extends FoodSection
 {
 
-    static int count = 1;
+    static int IDCount = 1;
     int ID;
+
+    int quantity = 1;
+
+
     @Override
     protected String getName() {
         return name;
@@ -21,6 +25,17 @@ public class VegetableCorner  extends FoodSection
         return ID;
     }
 
+    @Override
+    protected int getQuantity()
+    {
+        return quantity;
+    }
+
+    @Override
+    protected void setQuantity() {
+        this.quantity++;
+    }
+
 
     VegetableCorner()
     {
@@ -30,7 +45,7 @@ public class VegetableCorner  extends FoodSection
 
     VegetableCorner(String name, int price, String origin, String expirationDate, String manufacture) {
         super(name, price, origin, expirationDate, manufacture);
-        this.ID = count++;
+        this.ID = IDCount++;
     }
 
 
@@ -44,4 +59,7 @@ public class VegetableCorner  extends FoodSection
                 ", 제조일자='" + manufacture + '\'' +
                 '}';
     }
+
+
+
 }

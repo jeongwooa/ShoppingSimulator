@@ -17,7 +17,7 @@ public class ShoppingListTest
         Scanner sc = new Scanner(System.in);
 
 
-        List<String> finalShoppingList = new ArrayList<>(); // 쇼핑목록에 담긴 내용
+        List<FoodSection> finalShoppingList = new ArrayList<>(); // 쇼핑목록에 담긴 내용
 
         // 육류 객체 생성 후 리스트에 담기
         List<MeatCorner> meatCorners = new ArrayList<>();
@@ -34,7 +34,6 @@ public class ShoppingListTest
         System.out.println("     식료품 코너에서 먹을것을 사보자");
         System.out.println("------------식료품 코너의 목록----------------");
         ListOfItems(meatCorners, vegetableCorners, fruitCorners);
-
 
         int[] totalPayment = {0}; // 총 결제 금액
 
@@ -63,11 +62,12 @@ public class ShoppingListTest
 
 
 
+
             switch (select)
             {
                 case 1:
                 {
-                    MoveSelectCorner(meatCorners, finalShoppingList, totalPayment, "정육");
+                    MoveSelectCorner(meatCorners, finalShoppingList, totalPayment,  "정육");
                     break;
                 }
                 case 2:
@@ -110,7 +110,7 @@ public class ShoppingListTest
     }
 
 
-    static void showMyShopList(List<String> shoppingList)
+    static void showMyShopList(List<FoodSection> shoppingList)
     {
         System.out.println();
         System.out.println("-------나의 쇼핑 목록------");
@@ -119,14 +119,14 @@ public class ShoppingListTest
             System.out.println("아무것도 담겨있지 않습니다.");
             return;
         }
-        for (String item : shoppingList)
-            System.out.println(item);
+        for (FoodSection foodSection : shoppingList)
+            System.out.println(foodSection.shopListToString());
 
         System.out.println();
 
     }
 
-    static <T extends FoodSection> void MoveSelectCorner(List<T> corners, List<String> shopList, int[] payment, String name)
+    static <T extends FoodSection> void MoveSelectCorner(List<T> corners, List<FoodSection> shopList, int[] payment,  String name)
     {
 
         if (corners.getFirst() instanceof MeatCorner)
@@ -150,7 +150,7 @@ public class ShoppingListTest
 
     }
 
-    static <T extends FoodSection> void purchaseItem(List<T> itemList, List<String> shopList, int[] payment) // 물품 구매
+    static <T extends FoodSection> void purchaseItem(List<T> itemList, List<FoodSection> shopList, int[] payment) // 물품 구매
     {
         int select;
         Scanner sc = new Scanner(System.in);
@@ -175,15 +175,16 @@ public class ShoppingListTest
 
     //메서드의 매개변수 타입이 List<T>로 선언되어 있음
     // 즉, List 에 담긴 요소가 FoodSection 타입임을 보장해야만  getName() 메서드를 호출할 수 있다.
-    static <T extends FoodSection> void getInfoSelectItem(List<T> itemList, int ID, List<String> finalShopList, int[] payment) // 구매결정한 아이템의 정보 얻기
+    static <T extends FoodSection> void getInfoSelectItem(List<T> itemList, int ID, List<FoodSection> finalShopList, int[] payment) // 구매결정한 아이템의 정보 얻기
     {
 
         for (T item : itemList)
         {
             if (item.getID() == ID)
-            {
+            { 
                 System.out.println(item.getName() + "를 장바구니에 담았습니다.");
-                finalShopList.add("제품명: " + item.getName() + ", " + "가격: " + item.getPrice() + "원");
+                finalShopList.add(item);
+                if (finalShopList.size() > 1) CheckDuplicateItems(finalShopList, item);
                 payment[0] += item.getPrice();
                 return;
             }
@@ -195,17 +196,36 @@ public class ShoppingListTest
 
     }
 
-    static void writeData(List<String> shoppingList)
+    static <T extends FoodSection>void CheckDuplicateItems(List<FoodSection>finalShopList, T item) // 만약 장바구니에 동일한 아이템이 있다면
     {
-        try(BufferedWriter bfw = new BufferedWriter(new FileWriter("src/Mission/ShoppingListTest/ShopList.txt")))
-        {
-            for (String item : shoppingList)
-                bfw.write(item + "\n");
 
+
+        for (int i = 0; i < finalShopList.size()-1; i++)
+        {
+            if (finalShopList.get(i).getName().equals(item.getName()))
+            {
+                item.setQuantity();
+                finalShopList.removeLast();
+                break;
+            }
+
+        }
+
+
+
+    }
+
+
+    static void writeData(List<FoodSection> shoppingList)
+    {
+        try(BufferedWriter bfw = new BufferedWriter(new FileWriter("ShopList.txt")))
+        {
+            for (FoodSection foodSection : shoppingList)
+                bfw.write(foodSection + "\n");
         }
         catch (IOException e)
         {
-            throw new CustomException("파일을 읽지 못했어");
+            throw new CustomException("파일을 읽지 못했습니다.");
         }
 
     }

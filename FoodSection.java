@@ -16,6 +16,18 @@ public abstract class FoodSection
 
     protected abstract int getID();
 
+    protected abstract int getQuantity();
+
+    protected abstract void setQuantity();
+
+    public String shopListToString()
+    {
+        return  getID() + "{" +
+                "제품명='" + name + '\'' +
+                ", 가격=" + price +
+                ", 담은갯수='" + getQuantity() +
+                '}';
+    }
 
 
 
